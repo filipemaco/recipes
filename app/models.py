@@ -74,13 +74,10 @@ class UnitTypesEnum(enum.Enum):
 class Quantity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Float, nullable=False, default=0)
+    ingredient_name = db.Column(db.String(140))
     recipe_id = db.Column(
         db.Integer,
         db.ForeignKey('recipe.id'),
-        nullable=False)
-    ingredient_id = db.Column(
-        db.Integer,
-        db.ForeignKey('ingredient.id'),
         nullable=False)
     unit_type = db.Column(
         db.Enum(UnitTypesEnum),
@@ -91,7 +88,9 @@ class Quantity(db.Model):
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
+    food_group = db.Column(db.String(180), nullable=True)
+    food_subgroup = db.Column(db.String(180), nullable=True)
+    food_type = db.Column(db.String(180), nullable=True)
     type_quantity = db.Column(db.Boolean, default=False)
     type_volume = db.Column(db.Boolean, default=False)
     type_weight = db.Column(db.Boolean, default=False)
-    quantity = db.relationship('Quantity', backref='ingredient', lazy=True)

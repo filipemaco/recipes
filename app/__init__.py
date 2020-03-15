@@ -32,7 +32,7 @@ def create_app(config_class=Config):
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
     from app.main import bp as main_bp
-    app.register_blueprint(main_bp)
+    app.register_blueprint(main_bp, url_prefix='/main')
 
     # if not app.debug:
     #     if app.config['MAIL_SERVER']:

@@ -6,7 +6,7 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY')
 
     # Database
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:root@localhost/recipes'
+    SQLALCHEMY_DATABASE_URI = 'sqlite://///Users/filipe/recipes/recipes.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = os.environ.get('MAIL_SERVER')

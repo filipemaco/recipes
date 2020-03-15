@@ -1,9 +1,11 @@
+import json
+
 from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required
 from app import db
 from app.main.forms import EditProfileForm, RecipeForm
-from app.models import User
+from app.models import User, Recipe, Quantity, Ingredient
 from app.main import bp
 
 
@@ -18,32 +20,42 @@ def before_request():
 @login_required
 def index():
     recipe_form = RecipeForm()
-
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
     if recipe_form.validate_on_submit():
-        print("OLA", recipe_form)
+        recipe_name = recipe_form.name.data
+
+        recipe = Recipe(
+            name=recipe_name,
+            author=current_user
+        )
+
+        # db.session.add(recipe)
+        # db.session.commit()
+
+        for ingredient in recipe_form.ingredients.data:
+            if not ingredient['value']:
+                continue
+
+            # Confirm if ingredient exist
+
+            # ingredient = Ingredient.query.filter(Ingredient.name == ingredient['name']).first()
+
+            # ingredient = Quantity(
+            #     value=ingredient['value'],
+            #     recipe=recipe,
+            #     ingredient=ingredient,
+            # )
+
         return render_template(
             'main.html',
             title='Home',
             recipe_form=recipe_form,
-            posts=posts
         )
 
     return render_template(
         'main.html',
         title='Home',
         recipe_form=recipe_form,
-        posts=posts
-        )
+    )
 
 
 @bp.route('/user/<username>')

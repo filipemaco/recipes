@@ -6,30 +6,33 @@
 
 <form method="post" action="">
     {{ recipe_form.hidden_tag() }}
+    <div class="container">
 
-    {{ wtf.form_field(recipe_form.name) }}
-    {{ wtf.form_field(recipe_form.ingredients) }}
+        <div class="col-12">
+            {{ wtf.form_field(recipe_form.name) }}
+        </div>
 
-    <input type="submit" class="btn btn-primary" value="Save">
+        <div id="ingredients">
+            {% for ingredients in recipe_form.ingredients %}
+                {{ ingredients.hidden_tag() }}
+                {{ wtf.form_field(ingredients)  }}
+            {% endfor %}
+        </div>
+
+        <div class="col-12">
+            <button id="add_ingredient" type="button" class="btn btn-primary">Add Ingredient</button>
+        </div>
+
+
+        <div class="col-12">
+            <input type="submit" class="btn btn-primary" value="Save">
+        </div>
+
+    </div>
 </form>
 
-<table>
-    <thead>
-        <tr>
-            <th>Segunda</th>
-            <th>Terça</th>
-            <th>Quarta</th>
-            <th>Quinta</th>
-            <th>Sexta</th>
-            <th>Sábado</th>
-            <th>Domingo</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>January</td>
-            <td>$100</td>
-        </tr>
-    </tbody>
-</table>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/recipe.js') }}"></script>
 {% endblock %}

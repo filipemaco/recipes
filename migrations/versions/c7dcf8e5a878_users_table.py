@@ -1,8 +1,8 @@
 """users table
 
-Revision ID: 2777df7e02ca
+Revision ID: c7dcf8e5a878
 Revises: 
-Create Date: 2020-02-25 20:10:43.409052
+Create Date: 2020-03-15 12:39:30.074615
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2777df7e02ca'
+revision = 'c7dcf8e5a878'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,8 +21,12 @@ def upgrade():
     op.create_table('ingredient',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=140), nullable=True),
-    sa.Column('volume', sa.Boolean(), nullable=True),
-    sa.Column('weight', sa.Boolean(), nullable=True),
+    sa.Column('food_group', sa.String(length=180), nullable=True),
+    sa.Column('food_subgroup', sa.String(length=180), nullable=True),
+    sa.Column('food_type', sa.String(length=180), nullable=True),
+    sa.Column('type_quantity', sa.Boolean(), nullable=True),
+    sa.Column('type_volume', sa.Boolean(), nullable=True),
+    sa.Column('type_weight', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -46,10 +50,9 @@ def upgrade():
     op.create_table('quantity',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('value', sa.Float(), nullable=False),
+    sa.Column('ingredient_name', sa.String(length=140), nullable=True),
     sa.Column('recipe_id', sa.Integer(), nullable=False),
-    sa.Column('ingredient_id', sa.Integer(), nullable=False),
     sa.Column('unit_type', sa.Enum('teaspoon', 'tablespoon', 'fluid_ounce', 'cup', 'pint', 'quart', 'gallon', 'milliliter', 'liter', 'deciliter', 'pound', 'ounce', 'milligram', 'gram', 'kilogram', 'quantity', name='unittypesenum'), nullable=True),
-    sa.ForeignKeyConstraint(['ingredient_id'], ['ingredient.id'], ),
     sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

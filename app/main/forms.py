@@ -22,14 +22,13 @@ class EditProfileForm(FlaskForm):
 
 
 class IngredientForm(FlaskForm):
-    value = IntegerField('Value', validators=[
-        DataRequired()
-    ])
+    value = StringField('Value')
 
-    name = StringField('Ingredient name', validators=[DataRequired()])
     type_quantity = BooleanField('Type quantity')
     type_weight = BooleanField('Type weight')
     type_volume = BooleanField('Type volume')
+
+    ingredient_name = StringField('Ingredient')
 
     unit_type = SelectField(u'Unit Type', choices=[
             ('teaspoon', 'teaspoon'),
@@ -53,4 +52,4 @@ class IngredientForm(FlaskForm):
 
 class RecipeForm(FlaskForm):
     name = StringField('Recipe name', validators=[DataRequired()])
-    ingredients = FieldList(FormField(IngredientForm), min_entries=1)
+    ingredients = FieldList(FormField(IngredientForm), min_entries=2)
