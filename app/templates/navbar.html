@@ -1,20 +1,34 @@
-<nav class="navbar navbar-expand-lg justify-content-between navbar-light" style="background-color: #ffa259;">
-    <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='images/flower-1.png') }}" width="42"></a>
+<nav class="navbar navbar-expand-lg justify-content-between navbar-dark" style="background-color: #563d7c;">
+    <a class="navbar-brand" href="{{ url_for('main.my_recipes') }}"><img src="{{ url_for('static', filename='images/recipe.png') }}" width="42"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link nav_text" href="#">Criar Receitas</a>
+                <a class="nav-link nav_text {% if my_recipes %} active {% endif %}" href="{{ url_for('main.my_recipes') }}">My recipes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav_text" href="#">Link</a>
+                <a class="nav-link nav_text {% if all_recipes %} active {% endif %}" href="{{ url_for('main.all_recipes') }}">All recipes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav_text {% if add_recipe %} active {% endif %}" href="{{ url_for('main.add_recipe') }}">Create</a>
             </li>
         </ul>
-        <form class="form-inline">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
     </div>
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-default" aria-labelledby="navbarDropdownMenuLink">
+                {% if current_user.is_anonymous %}
+                    <a class="dropdown-item" href="{{ url_for('auth.login') }}"><span class="fas fa-sign-in-alt"></span> Login</a>
+                    <a class="dropdown-item" href="{{ url_for('auth.register') }}"><span class="fas fa-user"></span> Sign Up</a>
+                {% else %}
+                    <a class="dropdown-item" href="{{ url_for('auth.logout') }}"><span class="fas fa-sign-out-alt"></span> Log Out</a>
+                {% endif %}
+            </div>
+        </li>
+    </ul>
 </nav>

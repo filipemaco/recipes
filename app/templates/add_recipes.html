@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-3 mb-3" style="border-color:#cac5ea; border-radius: 25px;">
+                <h4 class="card-header" style="border-color:#cac5ea; border-radius: 25px; background-color: #cac5ea">
+                    <b>{% if edit_recipe %} Update your recipe {% else %} Create your recipe {% endif %}</b>
+                </h4>
+                <div class="card-body">
+                    <form method="post" action="">
+                        {{ recipe_form.hidden_tag() }}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    {{ wtf.form_field(recipe_form.name) }}
+                                    {% if recipe_name_repitition %}
+                                        <p style="margin-top: -16px" class="text-danger">
+                                            You have to change the name of the recipe
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if edit_recipe %}
+                                <ul id="edit_recipe" style="display: none;">
+                                    {% for ingredient in ingredients %}
+                                        <li id={{ loop.index0 }}
+                                            data-value={{ ingredient.value }}
+                                            data-ingredient_name={{ ingredient.ingredient_name }}
+                                            data-unit_type={{ ingredient.unit_type|remove_unit_type }}
+                                        ></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+
+                            <div id="ingredients" class="row">
+                                {% for ingredients in recipe_form.ingredients %}
+                                    {{ ingredients.hidden_tag() }}
+                                    <div class="col-6 ingredient_card mt-3" data-id="{{ loop.index0 }}">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ wtf.form_field(ingredients.ingredient_name)  }}</h5>
+                                                <span class="card-text">
+                                                    <div class="row">
+                                                        <div class="col-7 pr-0">
+                                                            {{ wtf.form_field(ingredients.value)  }}
+                                                        </div>
+                                                        <div class="col-5 pl-0">
+                                                            {{ wtf.form_field(ingredients.unit_type)  }}
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                                <div style="width: 100%">
+                                                    <span class="float-right remove_ingredient btn btn-outline-danger text-center" style="border-radius: 25px; width: 100px;">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="row mt-3 mb-3">
+                                <div class="col-6">
+                                    <button id="add_ingredient" type="button" class="btn btn-outline-warning" style="border-radius: 25px; width: 125px;"><i class="fas fa-plus"></i> Ingredient</button>
+                                </div>
+
+                                <div class="col-6 text-right">
+                                    <input type="submit" class="btn btn-outline-primary" style="border-radius: 25px; width: 100px;" value="{% if edit_recipe %} Update {% else %} Create {% endif %}">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='js/recipe.js') }}"></script>
+{% endblock %}

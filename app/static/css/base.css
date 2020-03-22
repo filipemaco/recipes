@@ -6,3 +6,40 @@
     line-height: 1.5;
     color: #212529;
 }
+
+body {
+    font-family: 'Baloo 2', cursive;
+}
+
+.vertical-align-content {
+    display:flex;
+    align-items:center;
+    /* Uncomment next line to get horizontal align also */
+    /* justify-content:center; */
+}
+
+.btn-outline-info {
+    color:#cac5ea;
+    border-color: #cac5ea;
+}
+
+.btn-outline-info:hover {
+    color: white;
+    background-color: #cac5ea;
+    border-color: white;
+}
+
+.btn-outline-primary {
+    color:#563d7c;
+    border-color: #563d7c;
+}
+
+.btn-outline-primary:hover {
+    color: white;
+    background-color: #563d7c;
+    border-color: white;
+}
+
+.height_38 {
+    height: 38px !important;
+}

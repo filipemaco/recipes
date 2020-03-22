@@ -41,7 +41,7 @@ class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    quantity = db.relationship('Quantity', backref='recipe', lazy=True)
+    quantity = db.relationship('Quantity', backref='recipe', lazy=True, passive_deletes=True)
 
     def __repr__(self):
         return '<Recipe {}>'.format(self.body)
@@ -77,7 +77,7 @@ class Quantity(db.Model):
     ingredient_name = db.Column(db.String(140))
     recipe_id = db.Column(
         db.Integer,
-        db.ForeignKey('recipe.id'),
+        db.ForeignKey('recipe.id', ondelete='CASCADE'),
         nullable=False)
     unit_type = db.Column(
         db.Enum(UnitTypesEnum),

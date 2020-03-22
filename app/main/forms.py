@@ -24,10 +24,6 @@ class EditProfileForm(FlaskForm):
 class IngredientForm(FlaskForm):
     value = StringField('Value')
 
-    type_quantity = BooleanField('Type quantity')
-    type_weight = BooleanField('Type weight')
-    type_volume = BooleanField('Type volume')
-
     ingredient_name = StringField('Ingredient')
 
     unit_type = SelectField(u'Unit Type', choices=[
@@ -52,4 +48,4 @@ class IngredientForm(FlaskForm):
 
 class RecipeForm(FlaskForm):
     name = StringField('Recipe name', validators=[DataRequired()])
-    ingredients = FieldList(FormField(IngredientForm), min_entries=2)
+    ingredients = FieldList(FormField(IngredientForm), min_entries=30)

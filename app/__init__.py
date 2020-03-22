@@ -34,6 +34,12 @@ def create_app(config_class=Config):
     from app.main import bp as main_bp
     app.register_blueprint(main_bp, url_prefix='/main')
 
+    # filter for jinja
+    def remove_unit_type(s):
+        return str(s)[14:]
+
+    app.jinja_env.filters['remove_unit_type'] = remove_unit_type
+
     # if not app.debug:
     #     if app.config['MAIL_SERVER']:
     #         auth = None

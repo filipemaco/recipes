@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="col-12 col-lg-6 col-xl-4">
+            <div class="card mt-3 mb-3" style="height: 380px; border-color:#cac5ea; border-radius: 25px;">
+                <h4 class="card-header" style="border-color:#cac5ea; border-radius: 25px; background-color: #cac5ea"><b>{{ recipe.name }}</b></h4>
+                <div class="card-body">
+                    <h5 class="card-title">Ingredients</h5>
+                    <ul class="list-group list-group-flush" style="height: 200px; overflow-y: auto;">
+                        {% for ingredient in recipe.quantity %}
+                        <li class="list-group-item" style="border-style: none;">
+                            {{ ingredient.ingredient_name }}
+                            <span style="float: right;">
+                                <small><b>{{ ingredient.value }} {{ ingredient.unit_type|remove_unit_type }}</b></small>
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="vertical-align-content" style="float: left; height: 60px;">
+                        <span class="p-2" style="border-radius: 25px; background-color:#d64d618c">
+                            <img src="{{ url_for('static', filename='images/recipe.png') }}" width="20">
+                            <span class="ml-2"> <b>{{ recipe.author.username }}</b></span>
+                        </span>
+                    </div>
+                    {% if recipe.author.id == current_user.id %}
+                        <div class="vertical-align-content" style="float: right; height: 60px;">
+                            <a href="{{ url_for('main.edit_recipe', id=recipe.id) }}" class="btn btn-outline-info" style="border-radius: 25px; width: 100px;">
+                                Edit
+                            </a>
+                        {% if my_recipes %}
+                            <button class="btn btn-outline-danger ml-2" data-toggle="modal" data-target="#delete_recipe" style="border-radius: 25px; width: 100px;">
+                                Delete
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="delete_recipe" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content" style="border-color:#cac5ea; border-radius: 25px;">
+                                        <div class="modal-header" style="border-bottom: none;">
+                                            <h4 class="modal-title" id="exampleModalLongTitle">Delete: <b>{{ recipe.name }}</b></h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="text-align: center;">
+                                            <h5 class="mb-4">Are you sure?</h5>
+                                            <button class="btn btn-outline-info mr-2" data-dismiss="modal" style="border-radius: 25px; width: 100px;">
+                                                Close
+                                            </button>
+                                            <a href="{{ url_for('main.delete_recipe', id=recipe.id) }}">
+                                                <button {{ recipe.name }} class="btn btn-outline-danger mr-2" data-toggle="modal" data-target="#delete_recipe" style="border-radius: 25px; width: 100px;">
+                                                    Delete
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

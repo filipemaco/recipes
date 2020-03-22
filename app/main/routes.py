@@ -16,20 +16,66 @@ def before_request():
         db.session.commit()
 
 
-@bp.route('/index', methods=['GET', 'POST'])
+@bp.route('/delete_recipe/<id>', methods=['GET', 'POST'])
 @login_required
-def index():
+def delete_recipe(id):
+    recipe = Recipe.query.filter_by(id=id).first()
+    quantity_set = Quantity.query.filter_by(recipe_id=recipe.id).all()
+    for quantity in quantity_set:
+        db.session.delete(quantity)
+        db.session.commit()
+
+    db.session.delete(recipe)
+    db.session.commit()
+
+    return redirect(url_for('main.my_recipes'))
+
+
+@bp.route('/my_recipes', methods=['GET'])
+@login_required
+def my_recipes():
+    recipes = Recipe.query.filter_by(author=current_user).all()
+
+    return render_template(
+        'recipes.html',
+        recipes=recipes,
+        my_recipes=True,
+    )
+
+
+@bp.route('/all_recipes', methods=['GET'])
+@login_required
+def all_recipes():
+    recipes = Recipe.query.all()
+    return render_template(
+        'recipes.html',
+        recipes=recipes,
+        all_recipes=True,
+    )
+
+
+@bp.route('/add_recipe', methods=['GET', 'POST'])
+@login_required
+def add_recipe():
     recipe_form = RecipeForm()
     if recipe_form.validate_on_submit():
         recipe_name = recipe_form.name.data
+
+        if Recipe.query.filter_by(author=current_user, name=recipe_name).count():
+            return render_template(
+                'add_recipes.html',
+                title='Home',
+                recipe_form=recipe_form,
+                recipe_name_repitition=True
+            )
 
         recipe = Recipe(
             name=recipe_name,
             author=current_user
         )
 
-        # db.session.add(recipe)
-        # db.session.commit()
+        db.session.add(recipe)
+        db.session.commit()
 
         for ingredient in recipe_form.ingredients.data:
             if not ingredient['value']:
@@ -37,24 +83,77 @@ def index():
 
             # Confirm if ingredient exist
 
-            # ingredient = Ingredient.query.filter(Ingredient.name == ingredient['name']).first()
+            ingredient = Quantity(
+                value=ingredient['value'],
+                recipe=recipe,
+                ingredient_name=ingredient['ingredient_name'],
+                unit_type=ingredient['unit_type'],
+            )
 
-            # ingredient = Quantity(
-            #     value=ingredient['value'],
-            #     recipe=recipe,
-            #     ingredient=ingredient,
-            # )
+            db.session.add(ingredient)
+            db.session.commit()
 
-        return render_template(
-            'main.html',
-            title='Home',
-            recipe_form=recipe_form,
-        )
+        return redirect(url_for('main.my_recipes'))
 
     return render_template(
-        'main.html',
+        'add_recipes.html',
         title='Home',
         recipe_form=recipe_form,
+        add_recipe=True,
+    )
+
+
+@bp.route('/edit_recipe/<id>', methods=['GET', 'POST'])
+@login_required
+def edit_recipe(id):
+    recipe = Recipe.query.filter_by(id=id).first()
+    recipe_form = RecipeForm()
+
+    if recipe_form.validate_on_submit():
+        recipe_name = recipe_form.name.data
+
+        if Recipe.query.filter(Recipe.author == current_user, Recipe.name == recipe_name, Recipe.id != id).count():
+            return render_template(
+                'add_recipes.html',
+                title='Home',
+                recipe_form=recipe_form,
+                recipe_name_repitition=True
+            )
+
+        recipe.name = recipe_name
+
+        db.session.add(recipe)
+        db.session.commit()
+
+        quantity_set = Quantity.query.filter_by(recipe_id=recipe.id).all()
+        for quantity in quantity_set:
+            db.session.delete(quantity)
+            db.session.commit()
+
+        for ingredient in recipe_form.ingredients.data:
+            if not ingredient['value']:
+                continue
+
+            # Confirm if ingredient exist
+            ingredient = Quantity(
+                value=ingredient['value'],
+                recipe=recipe,
+                ingredient_name=ingredient['ingredient_name'],
+                unit_type=ingredient['unit_type'],
+            )
+            db.session.add(ingredient)
+            db.session.commit()
+
+        return redirect(url_for('main.my_recipes'))
+
+    recipe_form.name.data = recipe.name
+
+    return render_template(
+        'add_recipes.html',
+        title='Home',
+        recipe_form=recipe_form,
+        ingredients=recipe.quantity,
+        edit_recipe=True,
     )
 
 
