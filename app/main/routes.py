@@ -3,8 +3,9 @@ import json
 from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required
+from flask import g
 from app import db
-from app.main.forms import EditProfileForm, RecipeForm
+from app.main.forms import EditProfileForm, RecipeForm, SearchForm
 from app.models import User, Recipe, Quantity, Ingredient
 from app.main import bp
 
@@ -14,6 +15,7 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+        g.search_form = SearchForm()
 
 
 @bp.route('/delete_recipe/<id>', methods=['GET', 'POST'])
@@ -31,26 +33,29 @@ def delete_recipe(id):
     return redirect(url_for('main.my_recipes'))
 
 
+@bp.route('', methods=['GET'])
 @bp.route('/my_recipes', methods=['GET'])
 @login_required
 def my_recipes():
-    recipes = Recipe.query.filter_by(author=current_user).all()
+    recipes = Recipe.query.filter_by(author=current_user).order_by(Recipe.name).all()
 
     return render_template(
         'recipes.html',
         recipes=recipes,
         my_recipes=True,
+        recipe_url="main:my_recipes"
     )
 
 
 @bp.route('/all_recipes', methods=['GET'])
 @login_required
 def all_recipes():
-    recipes = Recipe.query.all()
+    recipes = Recipe.query.order_by(Recipe.name).all()
     return render_template(
         'recipes.html',
         recipes=recipes,
         all_recipes=True,
+        recipe_url="main:all_recipes"
     )
 
 
@@ -183,3 +188,29 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
+
+@bp.route('/search/<url_to_redirect>')
+@login_required
+def search(url_to_redirect):
+    if not g.search_form.validate():
+        return redirect(url_for(url_to_redirect))
+    page = request.args.get('page', 1, type=int)
+    recipes, total = Recipe.search(g.search_form.q.data, page, 1000)
+
+    if 'my_recipes' in url_to_redirect:
+        recipes = recipes.filter_by(author=current_user).order_by(Recipe.name).all()
+        return render_template(
+            'recipes.html',
+            recipes=recipes,
+            my_recipes=True,
+            recipe_url="main:my_recipes"
+        )
+
+    recipes = recipes.order_by(Recipe.name).all()
+    return render_template(
+        'recipes.html',
+        recipes=recipes,
+        all_recipes=True,
+        recipe_url="main:all_recipes"
+    )

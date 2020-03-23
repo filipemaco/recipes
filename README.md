@@ -1,4 +1,4 @@
-# ------ DB commands ----- # 
+# ------ DB commands ----- #
 # Creates an infrastructure (migrations files)
 flask db init
 
@@ -24,3 +24,16 @@ https://colorhunt.co/palette/167033
 
 # correct the page according pycodestyle(https://github.com/hhatto/autopep8)
 $ autopep8 --in-place --aggressive --aggressive <filename>
+
+
+//USERS
+
+user: filipemaco
+pw: ??
+
+
+user: test1user
+pw: pass123
+
+user: test3user
+pw: pass123

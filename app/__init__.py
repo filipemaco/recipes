@@ -26,7 +26,7 @@ def create_app(config_class=Config):
     login.init_app(app)
     bootstrap.init_app(app)
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) if app.config['ELASTICSEARCH_URL'] else None
-    
+
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
@@ -35,6 +35,7 @@ def create_app(config_class=Config):
 
     from app.main import bp as main_bp
     app.register_blueprint(main_bp, url_prefix='/main')
+    app.register_blueprint(main_bp, url_prefix='/')
 
     # filter for jinja
     def remove_unit_type(s):

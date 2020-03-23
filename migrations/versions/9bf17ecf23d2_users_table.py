@@ -1,8 +1,8 @@
 """users table
 
-Revision ID: c7dcf8e5a878
+Revision ID: 9bf17ecf23d2
 Revises: 
-Create Date: 2020-03-15 12:39:30.074615
+Create Date: 2020-03-23 22:29:27.976935
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c7dcf8e5a878'
+revision = '9bf17ecf23d2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -53,7 +53,7 @@ def upgrade():
     sa.Column('ingredient_name', sa.String(length=140), nullable=True),
     sa.Column('recipe_id', sa.Integer(), nullable=False),
     sa.Column('unit_type', sa.Enum('teaspoon', 'tablespoon', 'fluid_ounce', 'cup', 'pint', 'quart', 'gallon', 'milliliter', 'liter', 'deciliter', 'pound', 'ounce', 'milligram', 'gram', 'kilogram', 'quantity', name='unittypesenum'), nullable=True),
-    sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
+    sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

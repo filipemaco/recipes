@@ -89,7 +89,7 @@ class Recipe(SearchableMixin, db.Model):
     quantity = db.relationship('Quantity', backref='recipe', lazy=True, passive_deletes=True)
 
     def __repr__(self):
-        return '<Recipe {}>'.format(self.body)
+        return '<Recipe {}>'.format(self.name)
 
 
 class UnitTypesEnum(enum.Enum):
