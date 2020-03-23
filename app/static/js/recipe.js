@@ -2,18 +2,6 @@ $( document ).ready(function() {
 
     let hide_ingredients = false;
 
-    $( "#ingredients .ingredient_card" ).each(function( count ) {
-        if (hide_ingredients) {
-            $(this).hide();
-        } else if (($("#ingredients-" + count + "-value").val())) {
-            console.log("dsdasd")
-        } else {
-            hide_ingredients = true;
-        }
-        $("#ingredients-" + count + "-value").addClass("allownumericwithdecimal");
-        $("#ingredients-" + count + "-unit_type").addClass("select2");
-    });
-
     $( "#add_ingredient" ).click(function() {
         $("#ingredients .ingredient_card:hidden:first").show();
     });
@@ -46,4 +34,15 @@ $( document ).ready(function() {
 
     $(".select2-selection--single").addClass("height_38");
 
+    $( "#ingredients .ingredient_card" ).each(function( count ) {
+        if (hide_ingredients) {
+            $(this).hide();
+        } else if (($("#ingredients-" + count + "-value").val())) {
+            console.log("dsdasd")
+        } else {
+            hide_ingredients = true;
+        }
+        $("#ingredients-" + count + "-value").addClass("allownumericwithdecimal");
+        $("#ingredients-" + count + "-unit_type").addClass("select2");
+    });
 });
