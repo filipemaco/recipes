@@ -8,6 +8,7 @@ class Config(object):
     # Database
     SQLALCHEMY_DATABASE_URI = 'sqlite://///Users/filipe/recipes/recipes.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    ELASTICSEARCH_URL = 'http://localhost:9200'
 
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
